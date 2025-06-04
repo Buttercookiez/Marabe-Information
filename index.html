@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Information</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            /* Light Mode (Latte Style) */
+            --bg-color: #FAF3E0;
+            --surface-color: #F5EBDD;
+            --table-bg: #EDE4D5;
+            --text-primary: #3E2723;
+            --text-secondary: #5D4037;
+            --input-bg: #EFE5DC;
+            --border-color: #D7CCC8;
+            /* Base Accent Colors */
+            --primary-accent: #6F4E37;
+            --primary-accent-hover: #5C3E2D;
+            --secondary-accent: #BCAAA4;
+            --secondary-accent-hover: #A1887F;
+            --success: #A3B18A;
+            --success-hover: #82966A;
+            --error: #A45A52;
+            --error-hover: #8B4A44;
+            --highlight: #C19A6B;
+            --highlight-hover: #A67C4F;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode (Espresso Style) */
+            --bg-color: #1C1B18;
+            --surface-color: #2E2A26;
+            --table-bg: #3A3631;
+            --text-primary: #F5F5DC;
+            --text-secondary: #BCAAA4;
+            --input-bg: #3E2723;
+            --border-color: #4E342E;
+            /* Base Accent Colors */
+            --primary-accent: #6F4E37;
+            --primary-accent-hover: #8B6A50;
+            --secondary-accent: #BCAAA4;
+            --secondary-accent-hover: #A1887F;
+            --success: #A3B18A;
+            --success-hover: #C1D1A8;
+            --error: #A45A52;
+            --error-hover: #C47A72;
+            --highlight: #C19A6B;
+            --highlight-hover: #D8B68A;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+        }
+
+        input {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.2);
+            transform: scale(1.02);
+        }
+
+        .btn {
+            transition: all 0.2s ease;
+            transform: translateY(0);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-accent-hover);
+        }
+
+        .btn-cancel {
+            background-color: var(--secondary-accent);
+            color: var(--text-primary);
+        }
+
+        .btn-cancel:hover {
+            background-color: var(--secondary-accent-hover);
+        }
+
+        .success-message {
+            background-color: var(--success);
+            color: var(--surface-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-message {
+            background-color: var(--error);
+            color: var(--surface-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        table {
+            background-color: var(--table-bg);
+            border: 2px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--surface-color);
+            color: var(--text-secondary);
+        }
+
+        tr {
+            transition: all 0.2s ease;
+        }
+
+        tr:hover {
+            transform: scale(1.01);
+            background-color: var(--highlight);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-slide-out {
+            animation: slideOut 0.3s ease forwards;
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+        }
+
+        .theme-toggle {
+            background-color: var(--secondary-accent);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--highlight);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 font-sans">
+    <div class="w-full max-w-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Contact Information</h1>
+            <button id="theme-toggle" class="theme-toggle p-2 rounded-full">
+                <svg id="sun-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                </svg>
+                <svg id="moon-icon" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="form-container card rounded-lg shadow-lg p-6 mb-6">
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Full Name</label>
+                <input type="text" id="name" name="name" required class="w-full p-2 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium mb-1 text-[var(--text-secondary)]">Email Address</label>
+                <input type="email" id="email" name="email" required class="w-full p-2 rounded-md">
+            </div>
+            <div class="flex space-x-2">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-md" id="submit-btn">Submit</button>
+                <button type="button" style="display: none;" id="update-btn" class="btn btn-primary px-4 py-2 rounded-md">Update</button>
+                <button type="button" style="display: none;" id="cancel-btn" class="btn btn-cancel px-4 py-2 rounded-md">Cancel</button>
+            </div>
+        </div>
+
+        <div class="success-message rounded-md p-4 mb-6 hidden" id="success-message">
+            <p class="text-sm">Got it</p>
+        </div>
+        <div class="error-message rounded-md p-4 mb-6 hidden" id="error-message">
+            <p class="text-sm">Error: <span id="error-text"></span></p>
+        </div>
+
+        <div id="users-table" class="card rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Users List</h2>
+            <div class="overflow-x-auto">
+                <table id="user-table" class="w-full">
+                    <thead>
+                        <tr>
+                            <th class="p-2 text-left">Name</th>
+                            <th class="p-2 text-left">Email</th>
+                            <th class="p-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx0U8B_3pTiK51bKshpr-BZB1F5YjV7j4",
+            authDomain: "database-marabe.firebaseapp.com",
+            projectId: "database-marabe",
+            storageBucket: "database-marabe.firebasestorage.app",
+            messagingSenderId: "299317456339",
+            appId: "1:299317456339:web:b7911e8e0763a1254c1326",
+            measurementId: "G-BGKPJF0BFM"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const form = document.querySelector('.form-container');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const submitBtn = document.getElementById('submit-btn');
+        const updateBtn = document.getElementById('update-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const tableBody = document.getElementById('user-table-body');
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
+
+        // Variable to track editing ID
+        let editingId = null;
+
+        // Function to validate email
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Function to show error message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            setTimeout(() => {
+                errorMessage.classList.add('animate-slide-out');
+                setTimeout(() => {
+                    errorMessage.classList.add('hidden');
+                    errorMessage.classList.remove('animate-slide-out');
+                }, 300);
+            }, 5000);
+        }
+
+        // Function to clear form
+        function clearForm() {
+            editingId = null;
+            nameInput.value = '';
+            emailInput.value = '';
+            updateBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-block';
+        }
+
+        // Function to fetch and display users
+        async function fetchUsers() {
+            try {
+                tableBody.innerHTML = '';
+                const querySnapshot = await getDocs(collection(db, 'contacts'));
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="p-2">${user.name}</td>
+                        <td class="p-2">${user.email}</td>
+                        <td class="p-2">
+                            <button class="btn btn-primary px-3 py-1 rounded-md mr-2" onclick="editUser('${doc.id}', '${user.name}', '${user.email}')">Edit</button>
+                            <button class="btn btn-primary px-3 py-1 rounded-md" onclick="deleteUser('${doc.id}')">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                showError('Failed to fetch users: ' + error.message);
+            }
+        }
+
+        // Form submission handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+
+            if (!name || !email) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+
+            try {
+                if (editingId) {
+                    // Update existing user
+                    const userRef = doc(db, 'contacts', editingId);
+                    await updateDoc(userRef, { name, email });
+                    successMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        successMessage.classList.add('animate-slide-out');
+                        setTimeout(() => {
+                            successMessage.classList.add('hidden');
+                            successMessage.classList.remove('animate-slide-out');
+                        }, 300);
+                    }, 2000);
+                    clearForm();
+                    fetchUsers();
+                } else {
+                    // Add new user
+                    await addDoc(collection(db, 'contacts'), { name, email });
+                    successMessage.classList.remove('hidden');
+                    setTimeout(() => {
+                        successMessage.classList.add('animate-slide-out');
+                        setTimeout(() => {
+                            successMessage.classList.add('hidden');
+                            successMessage.classList.remove('animate-slide-out');
+                        }, 300);
+                    }, 2000);
+                    clearForm();
+                    fetchUsers();
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        // Edit user
+        window.editUser = function(id, name, email) {
+            editingId = id;
+            nameInput.value = name;
+            emailInput.value = email;
+            updateBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+        };
+
+        // Delete user
+        window.deleteUser = async function(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                try {
+                    await deleteDoc(doc(db, 'contacts', id));
+                    fetchUsers();
+                } catch (error) {
+                    showError('Failed to delete user: ' + error.message);
+                }
+            }
+        };
+
+        // Cancel edit
+        window.cancelEdit = function() {
+            clearForm();
+        };
+
+        // Load users on page load
+        document.addEventListener('DOMContentLoaded', fetchUsers);
+    </script>
+</body>
+</html>
